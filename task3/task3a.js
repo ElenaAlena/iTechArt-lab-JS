@@ -1,4 +1,4 @@
-const downloads = [
+const DOWNLOADS = [
   {
     id: 1,
     title: "Recipe",
@@ -41,7 +41,7 @@ class MyTable {
   }
   createTableHead() {
     let tablehead = document.createElement("tr");
-    for (let prop in downloads[0]) {
+    for (let prop in DOWNLOADS[0]) {
       let th = document.createElement("th");
       th.innerText = prop;
       tablehead.appendChild(th);
@@ -52,7 +52,7 @@ class MyTable {
     this.data.forEach((item) => {
       let tableRow = document.createElement("tr");
       for (let prop in item) {
-        let td = document.createElement("td");
+        const td = document.createElement("td");
         td.innerText = item[prop];
         tableRow.appendChild(td);
       }
@@ -77,7 +77,7 @@ class MyButton {
     return this.button;
   }
 }
-let myTable =new MyTable(my_root,downloads);
+let myTable =new MyTable(my_root,DOWNLOADS);
 
 ///button
 let button = new MyButton("button", my_root);
@@ -85,7 +85,7 @@ button.button.addEventListener("click", function (event) {
   setTimeout(checkStatus, 2000, 0);
 });
 checkStatus = (i) => {
-  if (i < downloads.length) {
+  if (i < DOWNLOADS.length) {
     console.log("Check started");
     setTimeout(setStatus, 5000, i);
   } else {
@@ -94,12 +94,12 @@ checkStatus = (i) => {
 };
 setStatus = (i) => {
   let isDone = false;
-  while (i < downloads.length && !isDone) {
-    if (downloads[i].status === "Pending") {
-      isDone = true;
-      downloads[i].status = "Done";
-      myTable.itemsMap.get(downloads[i].id).lastChild.innerText = "Done";
+  while (i < DOWNLOADS.length && !isDone) {
+    if (DOWNLOADS[i].status === "Pending") {
+      DOWNLOADS[i].status = "Done";
+      myTable.itemsMap.get(DOWNLOADS[i].id).lastChild.innerText = "Done";
       console.log("Status Changed");
+      isDone = true;
     }
     i++;
   }

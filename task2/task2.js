@@ -1,9 +1,19 @@
 //a
-//window.x = 1;
-const bind =
+window.x = 1;
+/*const bind =
   (fn, context) =>
   (...args) =>
     fn.apply(context, [...args]);
+    */
+const bind =
+  (fn, context) =>
+  (...args) => {
+    const uniqId = Date.now().toString();
+    context[uniqId] = fn;
+    const result = context[uniqId](args);
+    delete context[uniqId];
+    return result;
+  };
 const context = { x: 2 };
 const testThis = function (y) {
   console.log(`x=${this.x}, y=${y}`);
@@ -30,8 +40,8 @@ console.log(add.apply(this, [0, 1]));
 console.log(add.call(this, 0, 1));
 
 ("Voltron can count to 3"); //1 + 2
-let a = add.bind(voltron);
-console.log(a(1, 2));
+const addBindedByVoltron = add.bind(voltron);
+console.log(addBindedByVoltron(1, 2));
 console.log(add.apply(voltron, [1, 2]));
 console.log(add.call(voltron, 1, 2));
 

@@ -5,7 +5,7 @@ Array.prototype.map2 = function (callback, thisArg) {
       throw new Error("Cant iterate over undefined or null");
     }
     let context = this;  
-    let currO = Object(this);
+    const appliedObject = Object(this);
   
     if (arguments.length > 1) {
       context = thisArg;
@@ -15,14 +15,13 @@ Array.prototype.map2 = function (callback, thisArg) {
       throw new Error("Callback is not a function");
     }
   
-    let len = currO.length;  
+    const appliedObjectLength = appliedObject.length;  
     let newArray = [];
   
-    let i = 0;
-  
-    while (i < len) {
-      if (i in currO) {
-        newArray[i] = callback.call(context, this[i], i, currO);
+    let i = 0;  
+    while (i < appliedObjectLength) {
+      if (i in appliedObject) {
+        newArray[i] = callback.call(context, this[i], i, appliedObject);
       }  
       i++;
     }
@@ -35,7 +34,7 @@ Array.prototype.filter2 = function (callback, thisArg) {
     }
   
     let context = this;  
-    let currO = Object(this);
+    const appliedObject = Object(this);
   
     if (arguments.length > 1) {
       context = thisArg;
@@ -45,13 +44,13 @@ Array.prototype.filter2 = function (callback, thisArg) {
       throw new Error("Callback is not a function");
     }
   
-    let currOLen = currO.length;  
+    const appliedObjectLength = appliedObject.length;  
     let result = [];
   
-    for (let i = 0; i < currOLen; i++) {
-      if (i in currO) {
-        let current = this[i];
-        if (callback.call(context, current, i, currO)) {
+    for (let i = 0; i < appliedObjectLength; i++) {
+      if (i in appliedObject) {
+        const current = this[i];
+        if (callback.call(context, current, i, appliedObject)) {
             result.push(current);
         }
       }
@@ -66,8 +65,8 @@ Array.prototype.reduce2 = function (callback, initValue) {
     let result;
     let i = 0;
   
-    let currO = Object(this);
-    let len = currO.length;
+    let appliedObject = Object(this);
+    const appliedObjectLength = appliedObject.length;
   
     if (typeof callback !== "function") {
       throw new Error("Callback is not a function");
@@ -76,23 +75,22 @@ Array.prototype.reduce2 = function (callback, initValue) {
     if (arguments.length >= 2) {
       result = initValue;
     } else {
-      if (len === 0) {
+      if (appliedObjectLength === 0) {
         throw new Error("Reduce of empty array with no initial value");
       }
-      result = currO[i];
+      result = appliedObject[i];
       i++;
     }
   
     for (; i < this.length; i++) {
-      if (i in currO) {
-        result = callback(result, currO[i], i, currO);
+      if (i in appliedObject) {
+        result = callback(result, appliedObject[i], i, appliedObject);
       }
-    }
-  
+    }  
     return result;
 };
 
-const notes = [
+const NOTES = [
   {
       id: 1,
       title: "Recipe",
@@ -128,33 +126,31 @@ const notes = [
 ];
 
 //b1
-notes.map2(currVal => {
-  return {id: currVal.id, title: currVal.title}
-});
+NOTES.map2(note => ({id: note.id, title: note.title}))
 
 //b
-notes.filter2(note=>note.isMarked);
+NOTES.filter2(note=>note.isMarked);
 
 //b3
-notes.reduce2((accum,currVal)=>accum+=currVal.pagesCount,0);
+NOTES.reduce2((accum,note)=>accum+=note.pagesCount,0);
 
 
 //c
-const testArray = [1,1,1,2,2,3,4,4,5,5,5,5];
-function getUnique1(testArray){
-  const newArr = new Set(testArray);
+const TESTARRAY = [1,1,1,2,2,3,4,4,5,5,5,5];
+function getUnique1(TESTARRAY){
+  const newArr = new Set(TESTARRAY);
   const outArr=[];
   newArr.forEach((item)=>{
-    testArray.indexOf(item)===testArray.lastIndexOf(item) ? outArr.push(item) : '';
+    TESTARRAY.indexOf(item)===TESTARRAY.lastIndexOf(item) ? outArr.push(item) : '';
   });
 return outArr.length===1 ? outArr[0] : null;
 }
-function getUnique2(testArray){
+function getUnique2(TESTARRAY){
   const outArr=[];
-  for(let i=0;i<testArray.length;i++){
-    testArray.indexOf(testArray[i])===testArray.lastIndexOf(testArray[i]) ? outArr.push(testArray[i]) : '';
+  for(let i=0;i<TESTARRAY.length;i++){
+    TESTARRAY.indexOf(TESTARRAY[i])===TESTARRAY.lastIndexOf(TESTARRAY[i]) ? outArr.push(TESTARRAY[i]) : '';
   }
   return outArr.length===1 ? outArr[0] : null;
 }
-console.log(getUnique1(testArray));
-console.log(getUnique2(testArray));
+console.log(getUnique1(TESTARRAY));
+console.log(getUnique2(TESTARRAY));
